@@ -1,14 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
 
-struct Term {
-	enum { Num, Operation } type;
-	union {
-		double num;
-		struct Operation* op;
-	};
-};
-
 struct Operation {
 #define STRINGABLE_ENUM(C) C(Add) C(Sub) C(Mul) C(Div) 
 	enum {
@@ -27,69 +19,76 @@ struct Operation {
 	}
 #undef STRINGABLE_ENUM
 
-	Term term1, term2;
+	struct Term* term1;
+	struct Term* term2;
 };
 
-const auto operation_pool_cap = 1024;
-Operation operation_pool[operation_pool_cap];
-int operation_pool_count = 0;
+struct Term {
+	enum { Number, Operation } type;
+	union {
+		double num;
+		struct Operation op;
+	};
+};
 
-void print_op(const Operation* const op);
+const auto term_pool_cap = 1024;
+Term term_pool[term_pool_cap];
+int term_pool_count = 0;
 
-void print_term(const Term& term, const int parent_index, const int term_num)
+#define ARR_COUNT(x) (sizeof(x)/sizeof((x)[0]))
+
+void print_term(const Term& term, const char* const parent_node, const int term_num)
 {
+	const auto index = (int)(&term - term_pool);
+	char node[256];
+
 	if (term.type == Term::Operation)
 	{
-		const auto term_index = (int)(term.op - operation_pool);
-		printf("\top_%d [label=%s]\n", term_index, Operation::enum_get_string(term.type));
-		printf("\top_%d -> op_%d\n", parent_index, term_index);
-		print_op(term.op);
+		snprintf(node, ARR_COUNT(node), "op_%d_%d", term_num, index);
+		printf("\t%s [label=%s]\n", node, Operation::enum_get_string(term.op.type));
 	}
 	else
 	{
-		printf("\tnum_%d_%d [label=%f]\n", term_num, parent_index, term.num);
-		printf("\top_%d -> num_%d_%d\n", parent_index, term_num, parent_index);
+		snprintf(node, ARR_COUNT(node), "num_%d_%d", term_num, index);
+		printf("\t%s [label=%f]\n", node, term.num);
+	}
+
+	if (parent_node)
+		printf("\t%s -> %s\n", parent_node, node);
+
+	if (term.type == Term::Operation)
+	{
+		print_term(*term.op.term1, node, 1);
+		print_term(*term.op.term2, node, 2);
 	}
 }
 
-void print_op(const Operation* const op)
+Term* alloc_term()
 {
-	const auto index = (int)(op - operation_pool);
-	printf("\top_%d [label=%s]\n", index, Operation::enum_get_string(op->type));
-	print_term(op->term1, index, 1);
-	print_term(op->term2, index, 2);
-}
-
-Operation* alloc_operation()
-{
-	assert(operation_pool_count < operation_pool_cap);
-	return &operation_pool[operation_pool_count++];
-}
-
-Operation* parse_string(const char* const string)
-{
-	auto op = alloc_operation();
-	op->type = Operation::Mul;
-	op->term1.type = Term::Operation;
-	op->term1.op = alloc_operation();
-	op->term1.op->type = Operation::Add;
-	op->term1.op->term1.type = Term::Num;
-	op->term1.op->term1.num = 5;
-	op->term1.op->term2.type = Term::Num;
-	op->term1.op->term2.num = 6;
-
-	op->term2.type = Term::Num;
-	op->term2.num = 2;
-
-	return op;
+	assert(term_pool_count < term_pool_cap);
+	return &term_pool[term_pool_count++];
 }
 
 int main()
 {
-	const auto string = "3*2";
-	const auto op = parse_string(string);
+	auto term = alloc_term();
+	term->type = Term::Operation;
+	term->op.type = Operation::Mul;
+	term->op.term1 = alloc_term();
+	term->op.term1->type = Term::Operation;
+	term->op.term1->op.type = Operation::Add;
+	term->op.term1->op.term1 = alloc_term();
+	term->op.term1->op.term1->type = Term::Number;
+	term->op.term1->op.term1->num = 5;
+	term->op.term1->op.term2 = alloc_term();
+	term->op.term1->op.term2->type = Term::Number;
+	term->op.term1->op.term2->num = 6;
+
+	term->op.term2 = alloc_term();
+	term->op.term2->type = Term::Number;
+	term->op.term2->num = 2;
 
 	printf("digraph {\n");
-	print_op(op);
+	print_term(*term, 0, 1);
 	printf("}\n");
 }
