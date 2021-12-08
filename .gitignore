@@ -1,0 +1,4 @@
+.vs/
+build_*/
+*.sln
+*.dot
