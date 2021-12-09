@@ -222,10 +222,10 @@ const char* const calculate_big(const Term& term)
 
 int main()
 {
-	const char string[] = "10312312312+31231231+22";
-#if 0
+	const char string[] = "3*2/5+43-2/2";
+#if 1
 	const auto term = parse_string(string, ARR_COUNT(string) - 1, false);
-	printf("%f\n", calculate(*term));
+	//printf("%f\n", calculate(*term));
 #else
 	const auto term = parse_string(string, ARR_COUNT(string) - 1, true);
 	printf("%s\n", calculate_big(*term));
