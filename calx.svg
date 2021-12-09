@@ -13,7 +13,7 @@
 <g id="node1" class="node">
 <title>op_1_0</title>
 <ellipse fill="none" stroke="black" cx="167.6" cy="-162" rx="28.7" ry="18"/>
-<text text-anchor="middle" x="167.6" y="-158.3" font-family="Times,serif" font-size="14.00">Mul</text>
+<text text-anchor="middle" x="167.6" y="-158.3" font-family="Times,serif" font-size="14.00">Add</text>
 </g>
 <!-- op_1_1 -->
 <g id="node2" class="node">
@@ -31,7 +31,7 @@
 <g id="node5" class="node">
 <title>num_2_4</title>
 <ellipse fill="none" stroke="black" cx="218.6" cy="-90" rx="54.69" ry="18"/>
-<text text-anchor="middle" x="218.6" y="-86.3" font-family="Times,serif" font-size="14.00">2.000000</text>
+<text text-anchor="middle" x="218.6" y="-86.3" font-family="Times,serif" font-size="14.00">0.000000</text>
 </g>
 <!-- op_1_0&#45;&gt;num_2_4 -->
 <g id="edge4" class="edge">
@@ -43,7 +43,7 @@
 <g id="node3" class="node">
 <title>num_1_2</title>
 <ellipse fill="none" stroke="black" cx="54.6" cy="-18" rx="54.69" ry="18"/>
-<text text-anchor="middle" x="54.6" y="-14.3" font-family="Times,serif" font-size="14.00">5.000000</text>
+<text text-anchor="middle" x="54.6" y="-14.3" font-family="Times,serif" font-size="14.00">0.000000</text>
 </g>
 <!-- op_1_1&#45;&gt;num_1_2 -->
 <g id="edge2" class="edge">
@@ -55,7 +55,7 @@
 <g id="node4" class="node">
 <title>num_2_3</title>
 <ellipse fill="none" stroke="black" cx="181.6" cy="-18" rx="54.69" ry="18"/>
-<text text-anchor="middle" x="181.6" y="-14.3" font-family="Times,serif" font-size="14.00">6.000000</text>
+<text text-anchor="middle" x="181.6" y="-14.3" font-family="Times,serif" font-size="14.00">0.000000</text>
 </g>
 <!-- op_1_1&#45;&gt;num_2_3 -->
 <g id="edge3" class="edge">
